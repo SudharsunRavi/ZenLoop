@@ -1,0 +1,53 @@
+//Info abt ZenLoop
+//Login and signup (username,password -> given by user) + avatar and userid(unique)
+
+//Intro-minddoc intro (ques) - Every 14days
+
+//General
+1) Age demographic
+2) Gender
+2) What do you do
+
+1) What brings u here? - Reduce anxiety, reduce stress, increase happiness, improve relationship, be more productive, overcome depression, feel more balanced, overcome social anxiety....(select min3)
+2) How much time can you dedicate to your mental health
+3) Age demographic
+4) Over last two weeks, how long have you been bothered by feeling nervous, anxious, or on edge?
+5) Over last two weeks, how long have you been bothered by not being able to stop or control worrying?
+6) Over last two weeks, how long have you been bothered by having little interest or pleasure in doing things?
+7) Are interpersonal relationships difficult for you?
+8) Do you often have conflicts or arguement with others?
+9) Do you usually get enough quality sleep?
+10) Are you able to maintain a work-life balance?
+11) Are you content with the state of your physical health?
+12) How are you feeling now? - Refer screenshot
+
+// AI-behaviour of user
+// CBT Info
+
+=================================================================================================================================================================================================================
+=================================================================================================================================================================================================================
+
+//Sidebar - Journal, AI chatbot(to be named), User dashboard (includes two graphs - mood tracker, anxiety tracker), Quotes/music page(shows relevant quotes or music(using spotify API))
+
+=================================================================================================================================================================================================================
+=================================================================================================================================================================================================================
+
+
+// AI-chatbot
+
+3 ways-> modify an existing model in huggingface
+       -> create and train a new one complete from scratch - something like a transformer-model like BERT
+       -> RASA
+
+     
+=================================================================================================================================================================================================================
+=================================================================================================================================================================================================================
+
+
+// Journal
+
+
+
+
+
+
