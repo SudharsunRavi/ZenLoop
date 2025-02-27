@@ -4,8 +4,7 @@
 //Intro-minddoc intro (ques) - Every 14days
 
 //General
-1) Age demographic
-2) Gender
+1) Gender
 2) What do you do
 
 1) What brings u here? - Reduce anxiety, reduce stress, increase happiness, improve relationship, be more productive, overcome depression, feel more balanced, overcome social anxiety....(select min3)
@@ -45,9 +44,3 @@
 
 
 // Journal
-
-
-
-
-
-
