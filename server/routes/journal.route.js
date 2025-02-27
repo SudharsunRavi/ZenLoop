@@ -1,11 +1,5 @@
-const express = require('express');
-const router = express.Router();
-const { 
-    addEntry, 
-    getMyEntry, 
-    getAllMyEntries, 
-    getMyEntryCount 
-} = require('../controllers/journal.controller');
+const router = require('express').Router();
+const { addEntry, getMyEntry, getAllMyEntries, getMyEntryCount } = require('../controllers/journal.controller');
 
 router.post('/entry', addEntry);
 router.get('/entry/:walletAddress/:index', getMyEntry);
