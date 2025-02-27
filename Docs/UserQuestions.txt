@@ -18,6 +18,7 @@
 9) Do you usually get enough quality sleep?
 10) Are you able to maintain a work-life balance?
 11) Are you content with the state of your physical health?
+12) How do you usually respond when you feel overwhelmed?
 12) How are you feeling now? - Refer screenshot
 
 // AI-behaviour of user
