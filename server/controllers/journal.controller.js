@@ -29,15 +29,9 @@ const addEntry = async (req, res) => {
         );
 
         const receipt = await web3.eth.sendSignedTransaction(signedTx.rawTransaction);
-        res.status(200).json({ 
-            status: true, 
-            transactionHash: receipt.transactionHash 
-        });
+        res.status(200).json({ status: true, transactionHash: receipt.transactionHash });
     } catch (error) {
-        res.status(500).json({ 
-            status: false, 
-            error: error.message 
-        });
+        res.status(500).json({ status: false, error: error.message });
     }
 };
 
@@ -46,22 +40,10 @@ const getMyEntry = async (req, res) => {
     const { walletAddress } = req.params;
 
     try {
-        const entry = await contract.methods.getMyEntry(index).call({ 
-            from: walletAddress 
-        });
-        
-        res.status(200).json({ 
-            status: true, 
-            entry: {
-                creationDate: Number(entry.creationDate),
-                content: entry.content
-            }
-        });
+        const entry = await contract.methods.getMyEntry(index).call({ from: walletAddress });
+        res.status(200).json({ status: true, entry: { creationDate: Number(entry.creationDate), content: entry.content}});
     } catch (error) {
-        res.status(500).json({ 
-            status: false, 
-            error: error.message 
-        });
+        res.status(500).json({ status: false, error: error.message });
     }
 };
 
@@ -69,51 +51,22 @@ const getAllMyEntries = async (req, res) => {
     const { walletAddress } = req.params;
 
     try {
-        const result = await contract.methods.getAllMyEntries().call({ 
-            from: walletAddress 
-        });
-
-        // Format the response to combine the arrays into an array of objects
-        const entries = result.creationDates.map((date, index) => ({
-            creationDate: Number(date),
-            content: result.contents[index]
-        }));
-
-        res.status(200).json({ 
-            status: true, 
-            entries 
-        });
+        const result = await contract.methods.getAllMyEntries().call({ from: walletAddress });
+        const entries = result.creationDates.map((date, index) => ({creationDate: Number(date), content: result.contents[index]}));
+        res.status(200).json({ status: true,  entries });
     } catch (error) {
-        res.status(500).json({ 
-            status: false, 
-            error: error.message 
-        });
+        res.status(500).json({ status: false, error: error.message });
     }
 };
 
 const getMyEntryCount = async (req, res) => {
     const { walletAddress } = req.params;
-
     try {
-        const count = await contract.methods.getMyEntryCount().call({ 
-            from: walletAddress 
-        });
-        
-        res.status(200).json({ 
-            status: true, 
-            count: Number(count) 
-        });
+        const count = await contract.methods.getMyEntryCount().call({ from: walletAddress });
+        res.status(200).json({ status: true, count: Number(count) });
     } catch (error) {
-        res.status(500).json({ 
-            status: false, 
-            error: error.message 
-        });
+        res.status(500).json({ status: false, error: error.message });
     }
 };
 
-module.exports = { 
-    addEntry, 
-    getMyEntry, 
-    getAllMyEntries, 
-    getMyEntryCount 
-};
+module.exports = { addEntry, getMyEntry, getAllMyEntries, getMyEntryCount };
