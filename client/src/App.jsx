@@ -6,6 +6,8 @@ import Signup from "./pages/Signup";
 import Login from "./pages/Login";
 import Journal from "./pages/Journal";
 import UserProfile from "./pages/UserProfile";
+import Chatbot from "./pages/Chatbot";
+import Dashboard from "./pages/Dashboard";
 
 // Components
 const SidebarComponent = lazy(() => import("./components/Sidebar"));
@@ -30,6 +32,8 @@ const App = () => {
                             <Route path="/login" element={<Login />} />
                             <Route path="/journal" element={<Journal />} />
                             <Route path="/user-profile" element={<UserProfile />} />
+                            <Route path="/chatbot" element={<Chatbot />} />
+                            <Route path="/dashboard" element={<Dashboard />} />
                         </Routes>
                     </div>
                 </div>

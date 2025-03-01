@@ -1,7 +1,7 @@
 import { useState, createContext } from "react";
 import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
-import { IconArrowLeft, IconBrandTabler, IconSettings, IconUserBolt } from "@tabler/icons-react";
+import { IconLogout, IconHome, IconNotebook, IconMessageChatbot } from "@tabler/icons-react";
 import { LOGO, SMALL_LOGO } from '../utils/Constants';
 
 const SidebarContext = createContext();
@@ -10,10 +10,10 @@ const SidebarComponent = () => {
   const [open, setOpen] = useState(false);
 
   const links = [
-    { label: "Dashboard", href: "/", icon: <IconBrandTabler className="h-6 w-6" /> },
-    { label: "Profile", href: "/user-profile", icon: <IconUserBolt className="h-6 w-6" /> },
-    { label: "Settings", href: "/settings", icon: <IconSettings className="h-6 w-6" /> },
-    { label: "Logout", href: "/logout", icon: <IconArrowLeft className="h-6 w-6" /> },
+    { label: "Dashboard", href: "/dashboard", icon: <IconHome className="h-6 w-6" /> },
+    { label: "Journal", href: "/journal", icon: <IconNotebook className="h-6 w-6" /> },
+    { label: "Chatbot", href: "/chatbot", icon: <IconMessageChatbot className="h-6 w-6" /> },
+    { label: "Logout", href: "/login", icon: <IconLogout className="h-6 w-6" /> },
   ];
 
   return (
@@ -25,8 +25,7 @@ const SidebarComponent = () => {
         onMouseEnter={() => setOpen(true)}
         onMouseLeave={() => setOpen(false)}
       >
-        {/* Sidebar Header */}
-        <Link to="#" className="flex items-center space-x-3 text-lg font-bold text-black dark:text-white">
+        <Link to="/dashboard" className="flex items-center space-x-3 text-lg font-bold text-black dark:text-white">
           <img 
             src={open ? LOGO : SMALL_LOGO} 
             alt="Zenloop Logo"
@@ -34,7 +33,6 @@ const SidebarComponent = () => {
           />
         </Link>
 
-        {/* Sidebar Links */}
         <div className="mt-8 flex flex-col space-y-3">
           {links.map((link, idx) => (
             <Link
@@ -54,13 +52,12 @@ const SidebarComponent = () => {
           ))}
         </div>
 
-        {/* Footer Profile */}
         <div className="mt-auto">
-          <Link to="#" className="flex items-center space-x-3 p-3 rounded-lg hover:bg-gray-200 dark:hover:bg-neutral-700">
+          <Link to="/user-profile" className="flex items-center space-x-3 p-3 rounded-lg hover:bg-gray-200 dark:hover:bg-neutral-700">
             <img src="https://assets.aceternity.com/manu.png" className="h-8 w-8 rounded-full" alt="Avatar" />
             {open && (
               <motion.span animate={{ opacity: 1 }} className="text-neutral-800 dark:text-neutral-200 whitespace-nowrap">
-                Manu Arora
+                User
               </motion.span>
             )}
           </Link>
