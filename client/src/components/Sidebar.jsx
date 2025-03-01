@@ -2,6 +2,7 @@ import { useState, createContext } from "react";
 import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
 import { IconArrowLeft, IconBrandTabler, IconSettings, IconUserBolt } from "@tabler/icons-react";
+import { LOGO, SMALL_LOGO } from '../utils/Constants';
 
 const SidebarContext = createContext();
 
@@ -26,8 +27,11 @@ const SidebarComponent = () => {
       >
         {/* Sidebar Header */}
         <Link to="#" className="flex items-center space-x-3 text-lg font-bold text-black dark:text-white">
-          <div className="h-8 w-8 bg-black dark:bg-white rounded" />
-          {open && <motion.span animate={{ opacity: 1 }} className="whitespace-nowrap">Zenloop</motion.span>}
+          <img 
+            src={open ? LOGO : SMALL_LOGO} 
+            alt="Zenloop Logo"
+            
+          />
         </Link>
 
         {/* Sidebar Links */}

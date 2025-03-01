@@ -7,5 +7,7 @@ export const QuestionIntro = "Hello! We're here to help you take the first step 
 export const CBT = "CBT (Cognitive Behavioral Therapy) is like a workout for your mind! It helps you catch negative thoughts, question them, and turn them into more positive, helpful ones. Think of it as training your brain to see things in a better way. On ZenLoop, we use CBT techniques to help you reflect, reframe, and feel better—one thought at a time!"
 
 import WHITE_BG from "./images/WHITEBG.jpg";
+import SMALL_LOGO from "./images/SmallLogo.png";
+import LOGO from "./images/Logo.png";
 
-export {WHITE_BG};
+export {LOGO, SMALL_LOGO, WHITE_BG};

@@ -1,4 +1,5 @@
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import { lazy, Suspense } from "react";
 
 // Pages
 import Signup from "./pages/Signup";
@@ -7,7 +8,7 @@ import Journal from "./pages/Journal";
 import UserProfile from "./pages/UserProfile";
 
 // Components
-import SidebarComponent from "./components/Sidebar";
+const SidebarComponent = lazy(() => import("./components/Sidebar"));
 
 import { WHITE_BG } from "./utils/Constants";
 
@@ -17,10 +18,11 @@ const App = () => {
             <div className="relative min-h-screen bg-cover bg-center bg-no-repeat">
                 <img src={WHITE_BG} alt="background" className="absolute inset-0 w-full h-full object-cover object-center" />
                 <div className="relative z-10 min-h-screen flex">
-                    {/* Sidebar */}
-                    <SidebarComponent />
 
-                    {/* Main Content */}
+                    <Suspense fallback={<div className="w-20 h-screen bg-gray-100 dark:bg-neutral-800" />}>
+                        <SidebarComponent />
+                    </Suspense>
+
                     <div className="flex-1 flex flex-col justify-center items-center">
                         <Routes>
                             <Route path="/" element={<Login />} />
