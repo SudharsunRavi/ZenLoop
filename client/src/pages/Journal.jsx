@@ -11,6 +11,7 @@ const Journal = () => {
     const [content, setContent] = useState("");
     const [entries, setEntries] = useState([]);
     const [loading, setLoading] = useState(false);
+    const [mood, setMood] = useState();
 
     useEffect(() => {
         connectWallet();
@@ -101,9 +102,9 @@ const Journal = () => {
     };
 
     return (
-        <div className="max-w-6xl mx-auto my-10 px-4">
+        <div className="w-[88vw] my-6 ml-20 px-4">
             <div className="flex justify-between items-center mb-8">
-                <h2 className="text-2xl font-bold">Journal Entries</h2>
+                <h2 className="text-2xl font-bold text-gray-800">Journal Entries</h2>
                 {!walletAddress ? (
                     <button 
                         onClick={connectWallet}
@@ -112,47 +113,68 @@ const Journal = () => {
                         Connect Wallet
                     </button>
                 ) : (
-                    <p className="text-gray-600">
-                        Wallet: {walletAddress.slice(0, 6)}...{walletAddress.slice(-4)}
-                    </p>
+                    <p className="text-gray-600">Wallet Connected</p>
                 )}
             </div>
 
             {walletAddress && (
-                <div className="space-y-6">
-                    <div className="flex flex-col gap-4">
+                <div className="flex flex-col gap-10">
+                    <div className="bg-white p-6 rounded-lg shadow-xl">
                         <textarea 
                             placeholder="Write your journal entry here..."
                             value={content}
                             onChange={(e) => setContent(e.target.value)}
-                            className="border rounded-lg p-4 h-56 focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                            className="border rounded-lg p-4 h-56 w-full focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-gray-100"
                         />
-                        
-                        <button 
-                            onClick={addJournalEntry}
-                            disabled={loading || !content}
-                            className="bg-green-500 text-white px-6 py-2 rounded-lg hover:bg-green-600 transition-colors disabled:bg-gray-300 disabled:cursor-not-allowed w-full sm:w-auto"
-                        >
-                            {loading ? "Adding..." : "Add Entry"}
-                        </button>
+                        <div className="mt-4 flex justify-between items-center">
+                            <div className="flex space-x-2">
+                                <p className="text-gray-700 mt-1">Select your mood:</p>
+                                {["😞", "😐", "😊", "😁", "🤩"].map((emoji, index) => (
+                                    <button 
+                                        key={index} 
+                                        onClick={() => setMood(index + 1)} 
+                                        className={`text-2xl ${mood === index + 1 ? 'border-2 border-blue-500 rounded-full' : ''}`}
+                                    >
+                                        {emoji}
+                                    </button>
+                                ))}
+                            </div>
+                            <button 
+                                onClick={addJournalEntry}
+                                disabled={loading || !content}
+                                className="bg-blue-500 text-white px-6 py-2 rounded-lg hover:bg-blue-600 transition-colors disabled:bg-gray-300 disabled:cursor-not-allowed"
+                            >
+                                {loading ? "Adding..." : "Add Entry"}
+                            </button>
+                        </div>
                     </div>
 
-                    <div className="mt-10">
+                    <div className="bg-white p-6 rounded-lg shadow-md">
                         <h3 className="text-xl font-semibold mb-4">Your Entries</h3>
                         {loading ? (
                             <p className="text-gray-600">Loading entries...</p>
                         ) : entries.length === 0 ? (
                             <p className="text-gray-600">No entries yet. Start writing!</p>
                         ) : (
-                            <div className="space-y-4">
-                                {entries.map((entry, index) => (
-                                    <div key={index} className="border rounded-lg p-4 bg-white shadow-sm">
-                                        <p className="text-gray-500 text-sm mb-2">
-                                            {formatDate(entry.creationDate)}
-                                        </p>
-                                        <p className="whitespace-pre-wrap">{entry.content}</p>
-                                    </div>
-                                ))}
+                            <div className="overflow-x-auto">
+                                <table className="min-w-full border-collapse">
+                                    <thead>
+                                        <tr className="bg-gray-200">
+                                            <th className="border p-2 text-left">Date & Time</th>
+                                            <th className="border p-2 text-left">Entry</th>
+                                            {/* <th className="border p-2 text-left">Mood</th> */}
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {entries.map((entry, index) => (
+                                            <tr key={index} className="border-b">
+                                                <td className="border p-2 text-gray-500">{formatDate(entry.creationDate)}</td>
+                                                <td className="border p-2 whitespace-pre-wrap">{entry.content}</td>
+                                                {/* <td className="border p-2 text-center text-2xl">{["😞", "😐", "😊", "😁", "🤩"][entry.mood - 1]}</td> */}
+                                            </tr>
+                                        ))}
+                                    </tbody>
+                                </table>
                             </div>
                         )}
                     </div>
