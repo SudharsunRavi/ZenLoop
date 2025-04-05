@@ -54,7 +54,7 @@ const Login = () => {
                   <div className="relative">
                     <input
                       type="text"
-                      name="username"
+                      id="username"
                       required
                       value={formData.email}
                       onChange={handleChange}
@@ -70,7 +70,7 @@ const Login = () => {
                   <div className="relative">
                     <input
                       type="password"
-                      name="password"
+                      id="password"
                       required
                       value={formData.password}
                       onChange={handleChange}

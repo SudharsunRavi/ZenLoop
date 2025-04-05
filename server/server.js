@@ -5,21 +5,24 @@ const dotenv=require('dotenv').config();
 const cors=require('cors');
 const http=require('http');
 
+const app=express();
+
+app.use(bodyParser.json());
+app.use(cookieParser());
+
 const connectToDB = require('./DatabaseConfig');
 const authRoutes=require('./routes/auth.route');
-const journalRoutes=require('./routes/journal.route')
-
-const app=express();
+const journalRoutes=require('./routes/journal.route');
+const surveyRoutes=require('./routes/survey.route');
 
 app.use(cors({
     origin: 'http://localhost:5173',
     credentials: true
 }));
-app.use(bodyParser.json());
-app.use(cookieParser());
 
 app.use('/auth', authRoutes);
-app.use('/journal', journalRoutes)
+app.use('/journal', journalRoutes);
+app.use('/survey', surveyRoutes);
 
 connectToDB().then(() => {
     app.listen(5050, () => {

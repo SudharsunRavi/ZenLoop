@@ -13,6 +13,7 @@ import Dashboard from "./pages/Dashboard";
 const SidebarComponent = lazy(() => import("./components/Sidebar"));
 
 import { WHITE_BG } from "./utils/Constants";
+import MentalHealthSurvey from "./pages/Survey";
 
 const App = () => {
     return (
@@ -27,7 +28,7 @@ const App = () => {
 
                     <div className="flex-1 flex flex-col justify-center items-center">
                         <Routes>
-                            <Route path="/" element={<Login />} />
+                            <Route path="/" element={<MentalHealthSurvey />} />
                             <Route path="/signup" element={<Signup />} />
                             <Route path="/login" element={<Login />} />
                             <Route path="/journal" element={<Journal />} />

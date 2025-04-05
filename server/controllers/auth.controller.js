@@ -50,7 +50,9 @@ const login = async (req, res) => {
         if (!verifyPassword) throw new Error("Invalid credentials");
 
         const { password, ...userInfo } = existingUser.toObject();
-        const token = jwt.sign({ token: existingUser._id }, process.env.JWT_SECRET, { expiresIn: '1d' });
+        //const token = jwt.sign({ token: existingUser._id }, process.env.JWT_SECRET, { expiresIn: '1d' });
+        const token = jwt.sign({ id: existingUser._id }, process.env.JWT_SECRET, { expiresIn: '1d' });
+
         res.cookie("token", token, {
             httpOnly: true,
             maxAge: 24 * 60 * 60 * 1000, // 1d

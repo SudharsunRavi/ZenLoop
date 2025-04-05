@@ -65,7 +65,7 @@ const Signup = () => {
               <div className="relative w-[310px] mb-8 border-b-2 border-black">
                 <input
                   type="text"
-                  name="username"
+                  id="username"
                   required
                   value={formData.username}
                   onChange={handleChange}
@@ -79,7 +79,7 @@ const Signup = () => {
               <div className="relative w-[310px] mb-8 border-b-2 border-black">
                 <input
                   type="password"
-                  name="password"
+                  id="password"
                   required
                   value={formData.password}
                   onChange={handleChange}

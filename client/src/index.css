@@ -6,3 +6,14 @@
     --font-header: 'Poppins';
     --font-body: 'Open Sans';
 }
+
+@layer components {
+    .btn {
+      @apply cursor-pointer px-2 py-1 rounded-md transition duration-300;
+    }
+  
+    .btn-primary {
+      @apply bg-neutral-900 text-slate-300 hover:bg-white hover:border hover:border-neutral-900 hover:text-neutral-900;
+    }
+  }
+  
