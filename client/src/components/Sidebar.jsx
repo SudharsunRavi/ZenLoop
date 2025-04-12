@@ -1,69 +1,69 @@
-import { useState, createContext } from "react";
-import { Link } from "react-router-dom";
-import { motion } from "framer-motion";
-import { IconLogout, IconHome, IconNotebook, IconMessageChatbot } from "@tabler/icons-react";
-import { LOGO, SMALL_LOGO } from '../utils/Constants';
-
-const SidebarContext = createContext();
+import { useState } from "react";
+import { Sidebar, Menu, MenuItem, SubMenu } from "react-pro-sidebar";
+import { RxDashboard } from "react-icons/rx";
+import { BsJournalCheck } from "react-icons/bs";
+import { TbMessageChatbot } from "react-icons/tb";
+import { MdLogout } from "react-icons/md";
+import { FaRegCircleUser } from "react-icons/fa6";
+import { LOGO } from "../utils/Constants";
+import { useDispatch, useSelector } from "react-redux";
+import toast from "react-hot-toast";
+import { login } from "../utils/redux/userSlice";
+import { Link, useNavigate } from "react-router-dom";
 
 const SidebarComponent = () => {
-  const [open, setOpen] = useState(false);
+  const [collapsed, setCollapsed] = useState(true);
+  const username = useSelector((state) => state?.user?.currentUser?.username);
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
 
-  const links = [
-    { label: "Dashboard", href: "/dashboard", icon: <IconHome className="h-6 w-6" /> },
-    { label: "Journal", href: "/journal", icon: <IconNotebook className="h-6 w-6" /> },
-    { label: "Chatbot", href: "/chatbot", icon: <IconMessageChatbot className="h-6 w-6" /> },
-    { label: "Logout", href: "/login", icon: <IconLogout className="h-6 w-6" /> },
-  ];
+  const handleLogout=async()=>{
+    try {
+      await fetch(`${import.meta.env.VITE_BASE_URL}/auth/logout`, {
+        method: "POST",
+        credentials: "include",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ username }),
+      });
+
+      dispatch(login(null));
+      toast.success("Logout successful!");
+      navigate("/login");
+    } catch (error) {
+      toast.error("Logout failed. Please try again.");
+    }
+  }
 
   return (
-    <SidebarContext.Provider value={{ open, setOpen }}>
-      <motion.div
-        className="fixed top-0 left-0 h-screen bg-gray-100 dark:bg-neutral-800 shadow-md flex flex-col p-4"
-        animate={{ width: open ? 200 : 90 }}
-        transition={{ duration: 0.3 }}
-        onMouseEnter={() => setOpen(true)}
-        onMouseLeave={() => setOpen(false)}
-      >
-        <Link to="/dashboard" className="flex items-center space-x-3 text-lg font-bold text-black dark:text-white">
-          <img 
-            src={open ? LOGO : SMALL_LOGO} 
-            alt="Zenloop Logo"
-            
-          />
-        </Link>
+    <div className="h-[100vh] w-24 text-neutral-300" onMouseEnter={() => setCollapsed(false)} onMouseLeave={() => setCollapsed(true)}>
+      <Sidebar collapsed={collapsed} backgroundColor="#1f2937" className="h-full transition-all duration-300 ease-in-out">
+        <div className="flex items-center justify-between p-4 border-b border-neutral-700">
+          {!collapsed && (
+            <img src={LOGO} alt="Logo" className="transition-all duration-300 w-44"/>
+          )}
 
-        <div className="mt-8 flex flex-col space-y-3">
-          {links.map((link, idx) => (
-            <Link
-              key={idx}
-              to={link.href}
-              className="flex items-center space-x-3 text-sm p-3 rounded-lg hover:bg-gray-200 dark:hover:bg-neutral-700 transition-all"
-            >
-              <div className="h-6 w-6 flex items-center justify-center text-neutral-900 dark:text-white">
-                {link.icon}
-              </div>
-              {open && (
-                <motion.span animate={{ opacity: 1 }} className="text-neutral-800 dark:text-neutral-200 whitespace-nowrap">
-                  {link.label}
-                </motion.span>
-              )}
-            </Link>
-          ))}
+          {collapsed && (
+            <img src="SmallLogo.png" alt="Logo" className="w-10 h-auto transition-all duration-300" />
+          )}
+        </div>
+        
+        <div className="flex flex-col justify-between h-[80%]">
+          <Menu>
+            <MenuItem icon={<RxDashboard />} component={<Link to="/dashboard" />}>Dashboard</MenuItem>
+            <MenuItem icon={<BsJournalCheck />} component={<Link to="/journal" />}>Journal</MenuItem>
+            <MenuItem icon={<TbMessageChatbot />} component={<Link to="/chatbot" />}>Chatbot</MenuItem>
+          </Menu>
+
+          <Menu>
+            <MenuItem icon={<MdLogout />} onClick={handleLogout}>Logout</MenuItem>
+            <MenuItem icon={<FaRegCircleUser />}>{`Hello, ${username}`}</MenuItem>
+          </Menu>
         </div>
 
-        <div className="mt-auto">
-          <Link to="/user-profile" className="flex items-center space-x-3 p-3 rounded-lg hover:bg-gray-200 dark:hover:bg-neutral-700">
-            <img src="https://assets.aceternity.com/manu.png" className="h-8 w-8 rounded-full" alt="Avatar" />
-            {open && (
-              <motion.span animate={{ opacity: 1 }} className="text-neutral-800 dark:text-neutral-200 whitespace-nowrap">
-                User
-              </motion.span>
-            )}
-          </Link>
-        </div>
-      </motion.div>
-    </SidebarContext.Provider>
+      </Sidebar>
+    </div>
   );
 };
 

@@ -5,7 +5,6 @@ const addSurvey=async(req, res)=>{
     try {
         const { responses, summary } = req.body;
         const userId = req.user
-        console.log(userId);
 
         const isUser=await userModule.findById(userId)
         if(!isUser) throw new Error("User doesnot exist.")
@@ -20,12 +19,12 @@ const addSurvey=async(req, res)=>{
 
 const getSurvey=async(req,res)=>{
     try {
-        const userid=req.params;
-        const isUser=await userModule.findOne({userid})
+        const {userid}=req.params;
+        const isUser=await userModule.findById(userid)
         if(!isUser) throw new Error("User doesnot exist.")
 
-        const userData=await surveyModule.findOne({userid})
-        res.status(201).json({ status: true, data: userData });
+        const sureryData=await surveyModule.findOne({userId: userid})
+        res.status(201).json({ status: true, data: sureryData });
     } catch (error) {
         res.status(500).json({ status: false, error: error.message });
     }

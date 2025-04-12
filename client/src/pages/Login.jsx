@@ -1,14 +1,28 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
+import { toast, Toaster } from "react-hot-toast";
+import { login } from "../utils/redux/userSlice";
 
 const Login = () => {
+    const currentUser = useSelector((state) => state?.user?.currentUser);
+
     const navigate = useNavigate();
+    const dispatch = useDispatch();
     const [formData, setFormData] = useState({
         username:"",
         password:""
     });
 
     const [error, setError] = useState(null);
+
+    useEffect(() => {
+      if(currentUser?._id) {
+        toast.error("You are already logged in", { duration: 3000 });
+        navigate("/dashboard");
+        return;
+      }
+    },[])
 
     const handleChange=(e)=>{
         setFormData({
@@ -20,12 +34,12 @@ const Login = () => {
     const handleSubmit = async (e) => {
         e.preventDefault();
         if (!username || !password) {
-            alert("Please fill all fields");
+            toast("Please fill all fields", { duration: 3000 });
             return;
         }
 
         try {
-            const response = await fetch(`http://localhost:5050/auth/login`, {
+            const response = await fetch(`${import.meta.env.VITE_BASE_URL}/auth/login`, {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify(formData),
@@ -33,16 +47,24 @@ const Login = () => {
             });
     
             const data = await response.json();
-            alert("Login successful");
-            navigate("/user-profile");
-            if(!data.status) alert(data.message)
+
+            if(data.status==false) {
+              toast.error(data.message, { duration: 3000 });
+              return;
+            }
+            
+            toast.success("Login successful!", { duration: 3000 });
+            dispatch(login(data.data))
+            navigate("/dashboard");
         } catch (error) {
-            return { status: false, message: "Network error" };
+            toast.error(error.message, { duration: 3000 });
+            return error;
         }
     };
 
     return (
         <div className="w-full flex justify-center items-center my-auto">
+          <Toaster/>
           <div className="relative w-[400px] h-[450px] bg-transparent border-2 border-black/50 rounded-[20px] backdrop-blur-md flex justify-center items-center">
             <div>
               <form className="flex flex-col items-center" onSubmit={handleSubmit}>

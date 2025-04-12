@@ -1,8 +1,12 @@
-import { useState } from "react";
-import connectWallet from "../utils/ConnectWallet";
+import { useEffect, useState } from "react";
+import connectWallet from "../components/ConnectWallet";
 import { Link, useNavigate } from "react-router-dom";
+import toast, { Toaster } from "react-hot-toast";
+import { useSelector } from "react-redux";
 
 const Signup = () => {
+    const currentUser = useSelector((state) => state.user.currentUser);
+
     const [formData, setFormData] = useState({
         username:"",
         password:"",
@@ -10,6 +14,14 @@ const Signup = () => {
     });
 
     const navigate = useNavigate();
+
+    useEffect(() => {
+      if(currentUser?._id) {
+        toast.error("You are already logged in", { duration: 3000 });
+        navigate("/dashboard");
+        return;
+      }
+    },[])
 
     const handleChange=(e)=>{
         setFormData({
@@ -21,22 +33,28 @@ const Signup = () => {
     const handleSignup = async (e) => {
         e.preventDefault();
         if(!formData.username ||  !formData.password || !formData.walletAddress){
-            alert('Fill all and connect metamask')
+            toast('Fill all and connect metamask', {duration: 3000});
             return;
         }
 
         try {
-            const response = await fetch(`http://localhost:5050/auth/signup`, {
+            const response = await fetch(`${import.meta.env.VITE_BASE_URL}/auth/signup`, {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify(formData),
             });
             const data = await response.json();
-            navigate("/login");
-            //console.log(data)
-            if(!data.status) alert(data.message)
             
+            //console.log(data)
+            if(!data.status){
+              toast.error(data.message, {duration: 3000});
+              return;
+            }
+            
+            toast.success("Signup successful!", {duration: 3000});
+            navigate("/login");
         } catch (error) {
+            toast.error(error.message, {duration: 3000});
             return { status: false, message: "Network error" };
         }
     };
@@ -48,17 +66,17 @@ const Signup = () => {
                 ...formData,
                 walletAddress:wallet?.account
             })
-            alert(`${wallet.account}`);
+            toast(`${wallet.account}`, {duration: 3000});
         } else {
-            alert(wallet.message);
+            toast(wallet.message, {duration: 3000});
         }
     };
 
     return (
-
         <div className="w-full flex justify-center items-center my-auto">
         <div className="relative w-[400px] h-[500px] bg-transparent border-2 border-black/50 rounded-[20px] backdrop-blur-md flex justify-center items-center">
           <div>
+          <Toaster/>
             <form className="flex flex-col items-center" onSubmit={handleSignup}>
               <h2 className="text-3xl text-black text-center mb-8">Signup</h2>
   

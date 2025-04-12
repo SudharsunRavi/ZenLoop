@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import Web3 from "web3";
+import { Toaster, toast } from "react-hot-toast";
 import abi from '../../../server/utils/contractABI.json';
 
 const CONTRACT_ADDRESS = "0x83Fb6f6023a965f45EC472539822f57D0Cc6A4f6";
@@ -32,13 +33,13 @@ const Journal = () => {
                 console.error("Wallet connection failed", error);
             }
         } else {
-            alert("Please install MetaMask");
+            toast.error("Please install MetaMask", {duration: 3000});
         }
     };
 
     const addJournalEntry = async () => {
         if (!walletAddress || !content) {
-            alert("Please provide content for the entry");
+            toast.error("Please provide content for the entry", {duration: 3000});
             return;
         }
         
@@ -60,11 +61,11 @@ const Journal = () => {
                 params: [transactionParameters],
             });
 
-            alert("Entry added successfully: " + txHash);
+            toast.success("Entry added successfully: " + txHash, {duration: 3000});
             setContent("");
             await fetchEntries();
         } catch (error) {
-            alert("Error adding entry: " + error.message);
+            toast.error("Error adding entry: " + error.message, {duration: 3000});
         }
         setLoading(false);
     };
@@ -75,7 +76,7 @@ const Journal = () => {
         setLoading(true);
         try {
             const result = await contract.methods.getAllMyEntries().call({ from: walletAddress });
-
+            console.log(result)
             const formattedEntries = result.creationDates.map((date, index) => ({
                 creationDate: new Date(Number(date) * 1000),
                 content: result.contents[index]
@@ -86,7 +87,7 @@ const Journal = () => {
             setEntries(formattedEntries);
         } catch (error) {
             console.error("Error fetching entries:", error);
-            alert("Error fetching entries: " + error.message);
+            toast.error("Error fetching entries: " + error.message, {duration: 3000});
         }
         setLoading(false);
     };
@@ -102,7 +103,8 @@ const Journal = () => {
     };
 
     return (
-        <div className="w-[88vw] my-6 ml-20 px-4">
+        <div className="w-[88vw] my-6">
+            <Toaster/>
             <div className="flex justify-between items-center mb-8">
                 <h2 className="text-2xl font-bold text-gray-800">Journal Entries</h2>
                 {!walletAddress ? (
@@ -119,7 +121,7 @@ const Journal = () => {
 
             {walletAddress && (
                 <div className="flex flex-col gap-10">
-                    <div className="bg-white p-6 rounded-lg shadow-xl">
+                    <div className="bg-white p-6 rounded-lg">
                         <textarea 
                             placeholder="Write your journal entry here..."
                             value={content}

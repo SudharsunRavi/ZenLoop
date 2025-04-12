@@ -1,24 +1,38 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import {questions} from '../utils/UserQuestions'
+import { useNavigate } from "react-router-dom";
+import toast, { Toaster } from "react-hot-toast";
+import { useSelector } from "react-redux";
 
-const questions = [
-  { id: 1, text: "What brings you here? (Select at least 3)", options: ["Reduce anxiety", "Reduce stress", "Increase happiness", "Improve relationship", "Be more productive", "Overcome depression", "Feel more balanced", "Overcome social anxiety"], multiple: true },
-  { id: 2, text: "How much time can you dedicate to your mental health?", options: ["Less than 10 mins", "10-30 mins", "30-60 mins", "More than 1 hour"] },
-  { id: 3, text: "Age demographic", options: ["Under 18", "18-24", "25-34", "35-44", "45-54", "55+"] },
-  { id: 4, text: "Over the last two weeks, how often have you been bothered by feeling nervous, anxious, or on edge?", options: ["Not at all", "Several days", "More than half the days", "Nearly every day"] },
-  { id: 5, text: "Over the last two weeks, how often have you been bothered by not being able to stop or control worrying?", options: ["Not at all", "Several days", "More than half the days", "Nearly every day"] },
-  { id: 6, text: "Over the last two weeks, how often have you been bothered by having little interest or pleasure in doing things?", options: ["Not at all", "Several days", "More than half the days", "Nearly every day"] },
-  { id: 7, text: "Are interpersonal relationships difficult for you?", options: ["Yes", "No", "Sometimes"] },
-  { id: 8, text: "Do you often have conflicts or arguments with others?", options: ["Yes", "No", "Sometimes"] },
-  { id: 9, text: "Do you usually get enough quality sleep?", options: ["Yes", "No", "Sometimes"] },
-  { id: 10, text: "Are you able to maintain a work-life balance?", options: ["Yes", "No", "Sometimes"] },
-  { id: 11, text: "Are you content with the state of your physical health?", options: ["Yes", "No", "Somewhat"] },
-  { id: 12, text: "How do you usually respond when you feel overwhelmed?", options: ["Withdraw", "Talk to someone", "Exercise", "Sleep", "Other"] },
-  { id: 13, text: "How are you feeling now?", options: ["Happy", "Anxious", "Stressed", "Sad", "Motivated", "Calm"] }
-];
-
-export default function MentalHealthSurvey() {
+const MentalHealthSurvey=()=>{
   const [currentQuestion, setCurrentQuestion] = useState(0);
   const [answers, setAnswers] = useState([]);
+  const navigate = useNavigate();
+
+  const userid=useSelector((state)=>state?.user?.currentUser?._id)
+
+  const surveryCheck=async()=>{
+    const res=await fetch(`${import.meta.env.VITE_BASE_URL}/survey/${userid}`, {
+      method: "GET",
+      credentials: "include",
+    })
+    const data=await res.json()
+    //console.log(data)
+
+    if(data.status==false) {
+      toast.error(data.message, { duration: 3000 })
+      return
+    }
+
+    if(data?.data?._id) {
+      toast.success("You have already filled the survey", { duration: 3000 })
+      navigate("/dashboard")
+    }
+  }
+
+  useEffect(()=>{
+    surveryCheck()
+  },[])
 
   const handleSelect = (option) => {
     const question = questions[currentQuestion];
@@ -38,7 +52,7 @@ export default function MentalHealthSurvey() {
     }));
     
   
-    const response = await fetch("http://localhost:5050/survey/", {
+    const response = await fetch(`${import.meta.env.VITE_BASE_URL}/survey/`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -52,11 +66,22 @@ export default function MentalHealthSurvey() {
   
     const data = await response.json();
     console.log(data);
+
+    if (!data.status) {
+      toast.error(data.message, { duration: 3000 });
+      return;
+    }
+
+    toast.success("Survey submitted successfully!", { duration: 3000 });
+    setCurrentQuestion(0);
+    setAnswers([]);
+    navigate("/dashboard");
   };
   
 
   return (
     <div className="flex flex-col items-center justify-center h-screen p-4">
+      <Toaster/>
       <div className=" p-6 rounded-lg w-full max-w-md">
         <h2 className="text-lg font-semibold mb-4">{questions[currentQuestion].text}</h2>
         <div className="space-y-2">
@@ -84,3 +109,5 @@ export default function MentalHealthSurvey() {
     </div>
   );
 }
+
+export default MentalHealthSurvey;
