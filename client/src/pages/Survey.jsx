@@ -17,7 +17,6 @@ const MentalHealthSurvey=()=>{
       credentials: "include",
     })
     const data=await res.json()
-    //console.log(data)
 
     if(data.status==false) {
       toast.error(data.message, { duration: 3000 })
@@ -80,29 +79,69 @@ const MentalHealthSurvey=()=>{
   
 
   return (
-    <div className="flex flex-col items-center justify-center h-screen p-4">
-      <Toaster/>
-      <div className=" p-6 rounded-lg w-full max-w-md">
-        <h2 className="text-lg font-semibold mb-4">{questions[currentQuestion].text}</h2>
-        <div className="space-y-2">
-          {questions[currentQuestion].options.map((option) => (
-            <button
-              key={option}
-              onClick={() => handleSelect(option)}
-              className={`w-full p-2 rounded-lg border cursor-pointer ${answers[questions[currentQuestion].id]?.includes(option) || answers[questions[currentQuestion].id] === option ? "bg-blue-400 bg-gradient-to-r to-blue-300 text-white" : "bg-gray-200"}`}
-            >
-              {option}
-            </button>
-          ))}
+    <div className="flex flex-col items-center justify-center min-h-screen p-4">
+      <Toaster />
+  
+      <div className="bg-white shadow-2xl rounded-2xl p-8 w-full max-w-md transition-all duration-300">
+        <div className="text-sm text-gray-500 mb-2 text-right">
+          Question {currentQuestion + 1} of {questions.length}
         </div>
-        <div className="flex justify-between mt-4">
-          {currentQuestion > 0 && (
-            <button className="btn btn-primary" onClick={() => setCurrentQuestion(currentQuestion - 1)}>Back</button>
-          )}
-          {currentQuestion < questions.length - 1 ? (
-            <button className="btn btn-primary" onClick={() => setCurrentQuestion(currentQuestion + 1)}>Next</button>
+  
+        <div className="min-h-[320px] flex flex-col justify-start">
+          <h2 className="text-xl font-semibold text-gray-800 mb-6">
+            {questions[currentQuestion].text}
+          </h2>
+  
+          <div className="space-y-3">
+            {questions[currentQuestion].options.map((option) => {
+              const selected =
+                answers[questions[currentQuestion].id]?.includes(option) ||
+                answers[questions[currentQuestion].id] === option;
+  
+              return (
+                <button
+                  key={option}
+                  onClick={() => handleSelect(option)}
+                  className={`w-full text-left px-4 py-2 rounded-xl border transition duration-200 ease-in-out transform hover:scale-[1.01] 
+                    ${
+                      selected
+                        ? "bg-gradient-to-r from-blue-500 to-blue-400 text-white border-blue-900 shadow-md"
+                        : "bg-gray-100 hover:bg-gray-200 text-gray-800 border-gray-300"
+                    }`}
+                >
+                  {option}
+                </button>
+              );
+            })}
+          </div>
+        </div>
+  
+        <div className="flex justify-between mt-6 items-center">
+          {currentQuestion > 0 ? (
+            <button
+              className="px-4 py-2 bg-white text-blue-600 border border-blue-500 rounded-xl hover:bg-blue-50 transition"
+              onClick={() => setCurrentQuestion(currentQuestion - 1)}
+            >
+              Back
+            </button>
           ) : (
-            <button onClick={handleSubmit} className="btn btn-primary">Submit</button>
+            <div className="w-[80px]" />
+          )}
+  
+          {currentQuestion < questions.length - 1 ? (
+            <button
+              className="px-6 py-2 bg-blue-600 text-white rounded-xl hover:bg-blue-700 transition"
+              onClick={() => setCurrentQuestion(currentQuestion + 1)}
+            >
+              Next
+            </button>
+          ) : (
+            <button
+              onClick={handleSubmit}
+              className="px-6 py-2 bg-green-600 text-white rounded-xl hover:bg-green-700 transition"
+            >
+              Submit
+            </button>
           )}
         </div>
       </div>

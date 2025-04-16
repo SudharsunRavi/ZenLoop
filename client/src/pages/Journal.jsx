@@ -103,87 +103,93 @@ const Journal = () => {
     };
 
     return (
-        <div className="w-[88vw] my-6">
-            <Toaster/>
-            <div className="flex justify-between items-center mb-8">
-                <h2 className="text-2xl font-bold text-gray-800">Journal Entries</h2>
-                {!walletAddress ? (
-                    <button 
-                        onClick={connectWallet}
-                        className="bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600 transition-colors"
-                    >
-                        Connect Wallet
-                    </button>
-                ) : (
-                    <p className="text-gray-600">Wallet Connected</p>
-                )}
-            </div>
-
-            {walletAddress && (
-                <div className="flex flex-col gap-10">
-                    <div className="bg-white p-6 rounded-lg">
-                        <textarea 
-                            placeholder="Write your journal entry here..."
-                            value={content}
-                            onChange={(e) => setContent(e.target.value)}
-                            className="border rounded-lg p-4 h-56 w-full focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-gray-100"
-                        />
-                        <div className="mt-4 flex justify-between items-center">
-                            <div className="flex space-x-2">
-                                <p className="text-gray-700 mt-1">Select your mood:</p>
-                                {["😞", "😐", "😊", "😁", "🤩"].map((emoji, index) => (
-                                    <button 
-                                        key={index} 
-                                        onClick={() => setMood(index + 1)} 
-                                        className={`text-2xl ${mood === index + 1 ? 'border-2 border-blue-500 rounded-full' : ''}`}
-                                    >
-                                        {emoji}
-                                    </button>
-                                ))}
-                            </div>
-                            <button 
-                                onClick={addJournalEntry}
-                                disabled={loading || !content}
-                                className="bg-blue-500 text-white px-6 py-2 rounded-lg hover:bg-blue-600 transition-colors disabled:bg-gray-300 disabled:cursor-not-allowed"
-                            >
-                                {loading ? "Adding..." : "Add Entry"}
-                            </button>
-                        </div>
-                    </div>
-
-                    <div className="bg-white p-6 rounded-lg shadow-md">
-                        <h3 className="text-xl font-semibold mb-4">Your Entries</h3>
-                        {loading ? (
-                            <p className="text-gray-600">Loading entries...</p>
-                        ) : entries.length === 0 ? (
-                            <p className="text-gray-600">No entries yet. Start writing!</p>
-                        ) : (
-                            <div className="overflow-x-auto">
-                                <table className="min-w-full border-collapse">
-                                    <thead>
-                                        <tr className="bg-gray-200">
-                                            <th className="border p-2 text-left">Date & Time</th>
-                                            <th className="border p-2 text-left">Entry</th>
-                                            {/* <th className="border p-2 text-left">Mood</th> */}
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        {entries.map((entry, index) => (
-                                            <tr key={index} className="border-b">
-                                                <td className="border p-2 text-gray-500">{formatDate(entry.creationDate)}</td>
-                                                <td className="border p-2 whitespace-pre-wrap">{entry.content}</td>
-                                                {/* <td className="border p-2 text-center text-2xl">{["😞", "😐", "😊", "😁", "🤩"][entry.mood - 1]}</td> */}
-                                            </tr>
-                                        ))}
-                                    </tbody>
-                                </table>
-                            </div>
-                        )}
-                    </div>
-                </div>
+        <div className="w-[88vw] max-w-7xl mx-auto my-5">
+          <Toaster />
+          <div className="flex justify-between items-center mb-8">
+            <h2 className="text-3xl font-bold text-gray-800">Journal Entries</h2>
+            {!walletAddress ? (
+              <button
+                onClick={connectWallet}
+                className="bg-blue-600 text-white px-5 py-2 rounded-xl shadow hover:bg-blue-700 transition-colors"
+              >
+                Connect Wallet
+              </button>
+            ) : (
+              <span className="text-sm text-green-600 font-medium">Wallet Connected</span>
             )}
+          </div>
+      
+          {walletAddress && (
+            <div className="flex flex-col gap-10">
+              <div className="bg-white p-6 rounded-2xl shadow-md">
+                <textarea
+                  placeholder="Write your journal entry here..."
+                  value={content}
+                  onChange={(e) => setContent(e.target.value)}
+                  className="border border-gray-300 rounded-xl p-4 h-56 w-full focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-gray-100 text-gray-800 resize-none transition"
+                />
+                <div className="mt-4 flex justify-between items-center flex-wrap gap-4">
+                  <div className="flex items-center space-x-3">
+                    <p className="text-gray-700 font-medium">Your Mood:</p>
+                    {["😞", "😐", "😊", "😁", "🤩"].map((emoji, index) => (
+                      <button
+                        key={index}
+                        onClick={() => setMood(index + 1)}
+                        className={`text-2xl transition transform hover:scale-110 ${
+                          mood === index + 1 ? "border-2 border-blue-500 rounded-full p-1" : ""
+                        }`}
+                      >
+                        {emoji}
+                      </button>
+                    ))}
+                  </div>
+      
+                  <button
+                    onClick={addJournalEntry}
+                    disabled={loading || !content}
+                    className="bg-blue-600 text-white px-6 py-2 rounded-xl hover:bg-blue-700 transition disabled:bg-gray-300 disabled:cursor-not-allowed"
+                  >
+                    {loading ? "Adding..." : "Add Entry"}
+                  </button>
+                </div>
+              </div>
+      
+                <div className="bg-white p-6 rounded-2xl shadow-md">
+                    <h3 className="text-xl font-semibold mb-4 text-gray-800">Your Entries</h3>
+                    {loading ? (
+                        <p className="text-gray-600">Loading entries...</p>
+                    ) : entries.length === 0 ? (
+                        <p className="text-gray-600">No entries yet. Start writing!</p>
+                    ) : (
+                        <div className="max-h-[400px] overflow-y-auto pr-2 scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-transparent">
+                        <table className="min-w-full border-separate border-spacing-y-2">
+                            <thead>
+                            <tr className="bg-gray-100 text-gray-700 sticky top-0 z-0">
+                                <th className="p-3 text-left rounded-l-lg bg-gray-100">Date & Time</th>
+                                <th className="p-3 text-left rounded-r-lg bg-gray-100">Entry</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            {entries.map((entry, index) => (
+                                <tr key={index} className="bg-gray-50 hover:bg-gray-100 transition rounded-xl">
+                                <td className="p-3 text-gray-500 align-top w-[160px]">
+                                    {formatDate(entry.creationDate)}
+                                </td>
+                                <td className="p-3 text-gray-800 whitespace-pre-wrap">
+                                    {entry.content}
+                                </td>
+                                </tr>
+                            ))}
+                            </tbody>
+                        </table>
+                        </div>
+                    )}
+                </div>
+            </div>
+          )}
         </div>
-    );
+      );
+      
 };
 
 export default Journal;

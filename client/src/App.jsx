@@ -15,7 +15,7 @@ import SidebarComponent from "./components/Sidebar";
 // Layout WITH Sidebar
 const AppLayout = () => {
   return (
-    <div className="flex min-h-screen gap-2">
+    <div className="flex min-h-screen gap-2 bg-gradient-to-br from-blue-100 via-white to-blue-200">
       <ProSidebarProvider>
         <SidebarComponent />
       </ProSidebarProvider>
@@ -30,7 +30,7 @@ const AppLayout = () => {
 // Layout WITHOUT Sidebar
 const BasicLayout = () => {
   return (
-    <div className="flex flex-col min-h-screen">
+    <div className="flex flex-col min-h-screen bg-gradient-to-br from-blue-100 via-white to-blue-200">
       <Outlet />
     </div>
   );
