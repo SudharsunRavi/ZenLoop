@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import Web3 from "web3";
 import { Toaster, toast } from "react-hot-toast";
-import abi from '../../../server/utils/contractABI.json';
+import abi from "../../../server/utils/contractABI.json";
 
 const CONTRACT_ADDRESS = "0x83Fb6f6023a965f45EC472539822f57D0Cc6A4f6";
 const web3 = new Web3(window.ethereum);
@@ -12,7 +12,7 @@ const Journal = () => {
     const [content, setContent] = useState("");
     const [entries, setEntries] = useState([]);
     const [loading, setLoading] = useState(false);
-    const [mood, setMood] = useState();
+    const [mood, setMood] = useState(null);
 
     useEffect(() => {
         connectWallet();
@@ -33,16 +33,16 @@ const Journal = () => {
                 console.error("Wallet connection failed", error);
             }
         } else {
-            toast.error("Please install MetaMask", {duration: 3000});
+            toast.error("Please install MetaMask", { duration: 3000 });
         }
     };
 
     const addJournalEntry = async () => {
         if (!walletAddress || !content) {
-            toast.error("Please provide content for the entry", {duration: 3000});
+            toast.error("Please provide content for the entry", { duration: 3000 });
             return;
         }
-        
+
         setLoading(true);
         try {
             const tx = contract.methods.addEntry(content);
@@ -61,33 +61,50 @@ const Journal = () => {
                 params: [transactionParameters],
             });
 
-            toast.success("Entry added successfully: " + txHash, {duration: 3000});
+            toast.success("Entry added: " + txHash.slice(0, 10) + "...", { duration: 3000 });
+
+            if (mood) {
+                await fetch(`${import.meta.env.VITE_BASE_URL}/journal/entry`, {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({
+                        walletAddress,
+                        txHash,
+                        mood
+                    })
+                });
+            }
+
             setContent("");
+            setMood(null);
             await fetchEntries();
         } catch (error) {
-            toast.error("Error adding entry: " + error.message, {duration: 3000});
+            toast.error("Error adding entry: " + error.message, { duration: 3000 });
         }
         setLoading(false);
     };
 
     const fetchEntries = async () => {
         if (!walletAddress) return;
-        
+
         setLoading(true);
         try {
-            const result = await contract.methods.getAllMyEntries().call({ from: walletAddress });
-            console.log(result)
-            const formattedEntries = result.creationDates.map((date, index) => ({
+            const blockchainRes = await contract.methods.getAllMyEntries().call({ from: walletAddress });
+            const moodRes = await fetch(`${import.meta.env.VITE_BASE_URL}/journal/entries/${walletAddress}`);
+            const moodData = await moodRes.json();
+
+            const formattedEntries = blockchainRes.creationDates.map((date, index) => ({
                 creationDate: new Date(Number(date) * 1000),
-                content: result.contents[index]
+                content: blockchainRes.contents[index],
+                mood: moodData[index]?.mood || null,
+                txHash: moodData[index]?.txHash || null
             }));
-            
+
             formattedEntries.sort((a, b) => b.creationDate - a.creationDate);
-            
             setEntries(formattedEntries);
         } catch (error) {
             console.error("Error fetching entries:", error);
-            toast.error("Error fetching entries: " + error.message, {duration: 3000});
+            toast.error("Error fetching entries: " + error.message, { duration: 3000 });
         }
         setLoading(false);
     };
@@ -104,11 +121,11 @@ const Journal = () => {
 
     return (
         <div className="w-[88vw] my-6">
-            <Toaster/>
+            <Toaster />
             <div className="flex justify-between items-center mb-8">
                 <h2 className="text-2xl font-bold text-gray-800">Journal Entries</h2>
                 {!walletAddress ? (
-                    <button 
+                    <button
                         onClick={connectWallet}
                         className="bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600 transition-colors"
                     >
@@ -122,7 +139,7 @@ const Journal = () => {
             {walletAddress && (
                 <div className="flex flex-col gap-10">
                     <div className="bg-white p-6 rounded-lg">
-                        <textarea 
+                        <textarea
                             placeholder="Write your journal entry here..."
                             value={content}
                             onChange={(e) => setContent(e.target.value)}
@@ -132,16 +149,16 @@ const Journal = () => {
                             <div className="flex space-x-2">
                                 <p className="text-gray-700 mt-1">Select your mood:</p>
                                 {["😞", "😐", "😊", "😁", "🤩"].map((emoji, index) => (
-                                    <button 
-                                        key={index} 
-                                        onClick={() => setMood(index + 1)} 
+                                    <button
+                                        key={index}
+                                        onClick={() => setMood(index + 1)}
                                         className={`text-2xl ${mood === index + 1 ? 'border-2 border-blue-500 rounded-full' : ''}`}
                                     >
                                         {emoji}
                                     </button>
                                 ))}
                             </div>
-                            <button 
+                            <button
                                 onClick={addJournalEntry}
                                 disabled={loading || !content}
                                 className="bg-blue-500 text-white px-6 py-2 rounded-lg hover:bg-blue-600 transition-colors disabled:bg-gray-300 disabled:cursor-not-allowed"
@@ -164,7 +181,7 @@ const Journal = () => {
                                         <tr className="bg-gray-200">
                                             <th className="border p-2 text-left">Date & Time</th>
                                             <th className="border p-2 text-left">Entry</th>
-                                            {/* <th className="border p-2 text-left">Mood</th> */}
+                                            <th className="border p-2 text-left">Mood</th>
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -172,7 +189,9 @@ const Journal = () => {
                                             <tr key={index} className="border-b">
                                                 <td className="border p-2 text-gray-500">{formatDate(entry.creationDate)}</td>
                                                 <td className="border p-2 whitespace-pre-wrap">{entry.content}</td>
-                                                {/* <td className="border p-2 text-center text-2xl">{["😞", "😐", "😊", "😁", "🤩"][entry.mood - 1]}</td> */}
+                                                <td className="border p-2 text-center text-2xl">
+                                                    {entry.mood ? ["😞", "😐", "😊", "😁", "🤩"][entry.mood - 1] : ""}
+                                                </td>
                                             </tr>
                                         ))}
                                     </tbody>
