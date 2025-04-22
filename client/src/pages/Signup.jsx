@@ -108,7 +108,7 @@ const Signup = () => {
                 </label>
               </div>
 
-                <button onClick={handleWalletConnect} className="w-[310px] h-10 rounded-full bg-gray-200 border-1 hover:bg-gray-300 cursor-pointer text-base font-semibold mb-6 text-black">
+                <button onClick={handleWalletConnect} className="w-[310px] h-10 rounded-full bg-gray-100 border-1 hover:bg-gray-300 cursor-pointer text-base font-semibold mb-6 text-black">
                     {formData?.walletAddress ? `Wallet Connected` : "Connect Wallet"}
                 </button>
   

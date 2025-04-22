@@ -37,33 +37,77 @@ const SidebarComponent = () => {
   }
 
   return (
-    <div className="h-[100vh] w-24 text-neutral-300" onMouseEnter={() => setCollapsed(false)} onMouseLeave={() => setCollapsed(true)}>
-      <Sidebar collapsed={collapsed} backgroundColor="#1f2937" className="h-full transition-all duration-300 ease-in-out">
-        <div className="flex items-center justify-between p-4 border-b border-neutral-700">
+    <div className="h-[100vh] w-24 text-white" onMouseEnter={() => setCollapsed(false)} onMouseLeave={() => setCollapsed(true)}>
+      <Sidebar collapsed={collapsed} backgroundColor="#101828" className="h-full transition-all duration-350 ease-in-out">
+        <div className="flex items-center justify-between p-4 border-b border-white">
           {!collapsed && (
-            <img src={LOGO} alt="Logo" className="transition-all duration-300 w-44"/>
+            <img src={LOGO} alt="Logo" className="transition-all duration-300 w-44" />
           )}
 
           {collapsed && (
             <img src="SmallLogo.png" alt="Logo" className="w-10 h-auto transition-all duration-300" />
           )}
         </div>
-        
-        <div className="flex flex-col justify-between h-[80%]">
-          <Menu>
-            <MenuItem icon={<RxDashboard />} component={<Link to="/dashboard" />}>Dashboard</MenuItem>
-            <MenuItem icon={<BsJournalCheck />} component={<Link to="/journal" />}>Journal</MenuItem>
-            <MenuItem icon={<TbMessageChatbot />} component={<Link to="/chatbot" />}>Chatbot</MenuItem>
+
+        <div className="flex flex-col justify-between h-[85%] mt-5">
+          <Menu
+            menuItemStyles={{
+              button: ({ level, active, disabled }) => {
+                if (level === 0) {
+                  return {
+                    color: '#fff',
+                    backgroundColor: active ? '#374151' : 'transparent',
+                    '&:hover': {
+                      backgroundColor: '#374151',
+                    },
+                  };
+                }
+              },
+            }}
+          >
+            <MenuItem icon={<BsJournalCheck className="text-2xl"/>} component={<Link to="/journal" />}>
+              Journal
+            </MenuItem>
+            <MenuItem icon={<TbMessageChatbot className="text-2xl"/>} component={<Link to="/chatbot" />}>
+              Chatbot
+            </MenuItem>
+            <MenuItem icon={<RxDashboard className="text-2xl"/>} component={<Link to="/dashboard" />}>
+              Dashboard
+            </MenuItem>
           </Menu>
 
-          <Menu>
-            <MenuItem icon={<MdLogout />} onClick={handleLogout}>Logout</MenuItem>
-            <MenuItem icon={<FaRegCircleUser />}>{`Hello, ${username}`}</MenuItem>
+          <Menu
+            menuItemStyles={{
+              button: ({ level }) => {
+                if (level === 0) {
+                  return {
+                    color: '#fff',
+                    '&:hover': {
+                      backgroundColor: '#374151',
+                    },
+                  };
+                }
+              },
+            }}
+          >
+            <MenuItem icon={<FaRegCircleUser className="text-2xl"/>}>
+              {`Hello ${username}`}
+            </MenuItem>
+            <MenuItem
+              icon={<MdLogout className="text-2xl"/>}
+              onClick={handleLogout}
+              style={{
+                color: '#fff',
+              }}
+            >
+              Logout
+            </MenuItem>
           </Menu>
         </div>
-
       </Sidebar>
+
     </div>
+  
   );
 };
 
