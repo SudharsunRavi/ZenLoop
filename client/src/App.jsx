@@ -8,14 +8,14 @@ import Journal from "./pages/Journal";
 import Chatbot from "./pages/Chatbot";
 import Dashboard from "./pages/Dashboard";
 import MentalHealthSurvey from "./pages/Survey";
-import LandingPage from "./pages/Landing page";
+import LandingPage from "./pages/LandingPage";
 
 import SidebarComponent from "./components/Sidebar";
 
 // Layout WITH Sidebar
 const AppLayout = () => {
   return (
-    <div className="flex min-h-screen gap-2 bg-gradient-to-br from-blue-100 via-white to-blue-200">
+    <div className="flex min-h-screen gap-2 bg-gradient-to-br from-blue-200 via-white to-blue-300">
       <ProSidebarProvider>
         <SidebarComponent />
       </ProSidebarProvider>
@@ -30,7 +30,7 @@ const AppLayout = () => {
 // Layout WITHOUT Sidebar
 const BasicLayout = () => {
   return (
-    <div className="flex flex-col min-h-screen bg-gradient-to-br from-blue-100 via-white to-blue-200">
+    <div className="flex flex-col min-h-screen bg-gradient-to-br from-blue-200 via-white to-blue-300">
       <Outlet />
     </div>
   );
