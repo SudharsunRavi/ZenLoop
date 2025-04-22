@@ -13,6 +13,7 @@ const Journal = () => {
     const [entries, setEntries] = useState([]);
     const [loading, setLoading] = useState(false);
     const [mood, setMood] = useState();
+    const [showValidation, setShowValidation] = useState(false);
 
     useEffect(() => {
         connectWallet();
@@ -42,6 +43,11 @@ const Journal = () => {
             toast.error("Please provide content for the entry", {duration: 3000});
             return;
         }
+
+        if (!mood) {
+          setShowValidation(true);
+          return;
+        }
         
         setLoading(true);
         try {
@@ -63,6 +69,8 @@ const Journal = () => {
 
             toast.success("Entry added successfully: " + txHash, {duration: 3000});
             setContent("");
+            setMood(0);
+            setShowValidation(false);
             await fetchEntries();
         } catch (error) {
             toast.error("Error adding entry: " + error.message, {duration: 3000});
@@ -134,8 +142,11 @@ const Journal = () => {
                     {["😞", "😐", "😊", "😁", "🤩"].map((emoji, index) => (
                       <button
                         key={index}
-                        onClick={() => setMood(index + 1)}
-                        className={`text-2xl transition transform hover:scale-110 ${
+                        onClick={() => {
+                          setMood(index + 1);
+                          setShowValidation(false);
+                        }}
+                        className={`text-2xl transition transform hover:scale-140 ${
                           mood === index + 1 ? "border-2 border-blue-500 rounded-full p-1" : ""
                         }`}
                       >
@@ -143,6 +154,10 @@ const Journal = () => {
                       </button>
                     ))}
                   </div>
+
+                  {!mood && showValidation && (
+                    <p className="text-sm text-red-500 mt-1">Please select your mood.</p>
+                  )}
       
                   <button
                     onClick={addJournalEntry}
