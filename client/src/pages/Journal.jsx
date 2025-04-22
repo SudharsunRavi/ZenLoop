@@ -69,7 +69,7 @@ const Journal = () => {
 
             toast.success("Entry added successfully: " + txHash, {duration: 3000});
             setContent("");
-            setMood(0);
+            setMood(null);
             setShowValidation(false);
             await fetchEntries();
         } catch (error) {
