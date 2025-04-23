@@ -30,7 +30,7 @@ const SidebarComponent = () => {
 
       dispatch(login(null));
       toast.success("Logout successful!");
-      navigate("/login");
+      navigate("/");
     } catch (error) {
       toast.error("Logout failed. Please try again.");
     }

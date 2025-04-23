@@ -14,6 +14,7 @@ const connectToDB = require('./DatabaseConfig');
 const authRoutes=require('./routes/auth.route');
 const journalRoutes=require('./routes/journal.route');
 const surveyRoutes=require('./routes/survey.route');
+const chatRoutes = require('./routes/chat.route');
 
 app.use(cors({
     origin: 'http://localhost:5173',
@@ -23,6 +24,7 @@ app.use(cors({
 app.use('/auth', authRoutes);
 app.use('/journal', journalRoutes);
 app.use('/survey', surveyRoutes);
+app.use('/api', chatRoutes)
 
 connectToDB().then(() => {
     app.listen(5050, () => {

@@ -55,7 +55,7 @@ const Login = () => {
             
             toast.success("Login successful!", { duration: 3000 });
             dispatch(login(data.data))
-            navigate("/dashboard");
+            navigate("/journal");
         } catch (error) {
             toast.error(error.message, { duration: 3000 });
             return error;
