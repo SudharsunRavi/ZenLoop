@@ -137,7 +137,7 @@ const Journal = () => {
         <div className="flex flex-col gap-10">
           <div className="bg-white p-6 rounded-2xl shadow-md">
             <textarea
-              placeholder="Write your journal entry here..."
+              placeholder="Write your journal here..."
               value={content}
               onChange={(e) => setContent(e.target.value)}
               className="border border-gray-300 rounded-xl p-4 h-56 w-full focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-gray-100 text-gray-800 resize-none transition"
@@ -182,12 +182,12 @@ const Journal = () => {
             ) : entries.length === 0 ? (
               <p className="text-gray-600">No entries yet. Start writing!</p>
             ) : (
-              <div className="max-h-[400px] overflow-y-auto pr-2 scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-transparent">
+              <div className="h-[250px] overflow-y-auto pr-2 scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-transparent rounded-xl border border-gray-200">
                 <table className="min-w-full border-separate border-spacing-y-2">
                   <thead>
-                    <tr className="bg-gray-100 text-gray-700 sticky top-0 z-0">
-                      <th className="p-3 text-left rounded-l-lg bg-gray-100">Date & Time</th>
-                      <th className="p-3 text-left rounded-r-lg bg-gray-100">Entry</th>
+                    <tr className="bg-gray-200 text-gray-700 sticky top-0 z-0">
+                      <th className="p-3 text-left">Date & Time</th>
+                      <th className="p-3 text-left">Entry</th>
                     </tr>
                   </thead>
                   <tbody>
