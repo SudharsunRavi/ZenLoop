@@ -41,9 +41,9 @@ const LandingPage = () => {
           </p>
           <button
             onClick={() => navigate("/login")}
-            className="mt-4 px-6 py-3 bg-blue-600 text-white font-semibold rounded-lg hover:bg-blue-800 transition"
+            className="mt-3 py-3 text-lg text-blue-600 font-semibold rounded-lg hover:text-blue-800 transition"
           >
-            Get Started
+            Get Started ➜
           </button>
         </div>
 

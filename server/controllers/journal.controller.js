@@ -24,6 +24,10 @@ const saveMetadata = async (req, res) => {
 
 const getMetadata = async (req, res) => {
     const { wallet } = req.params;
+    if (!wallet) {
+        return res.status(400).json({ error: "Wallet address is required" });
+    }
+
     try {
         const metadata = await JournalEntry.find({ walletAddress: wallet }).sort({ createdAt: 1 });
         return res.json(metadata);
@@ -32,4 +36,24 @@ const getMetadata = async (req, res) => {
     }
 };
 
-module.exports = { saveMetadata, getMetadata };
+const getUserMoods = async (req, res) => {
+    const { wallet } = req.params;
+    if (!wallet) {
+      return res.status(400).json({ error: "Wallet address is required" });
+    }
+    try {
+      const query = JournalEntry.find({walletAddress: { $regex: new RegExp(`^${wallet}$`, "i") }}).sort({ createdAt: 1 }).select("mood createdAt -_id");
+      const moods = await query.exec();
+      const moodData = moods.map(entry => ({
+        mood: entry.mood,
+        timestamp: entry.createdAt,
+      }));
+  
+      return res.json(moodData);
+    } catch (err) {
+      console.error("Error fetching moods:", err);
+      return res.status(500).json({ error: err.message });
+    }
+  };
+
+module.exports = { saveMetadata, getMetadata, getUserMoods };
