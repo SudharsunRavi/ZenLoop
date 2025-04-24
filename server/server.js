@@ -24,7 +24,7 @@ app.use(cors({
 app.use('/auth', authRoutes);
 app.use('/journal', journalRoutes);
 app.use('/survey', surveyRoutes);
-app.use('/api', chatRoutes)
+app.use('/api/chat', chatRoutes);
 
 connectToDB().then(() => {
     app.listen(5050, () => {

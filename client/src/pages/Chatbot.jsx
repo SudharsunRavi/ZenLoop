@@ -1,46 +1,105 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { useSelector } from "react-redux";
 
 const Chatbot = () => {
   const [userMessage, setUserMessage] = useState("");
   const [messages, setMessages] = useState([
     {
       role: "assistant",
-      content: "Hi there! How are you feeling today?",
+      content: "Hi there! How are you feeling today?"
     },
   ]);
   const [loading, setLoading] = useState(false);
+
+  const userId = useSelector((state) => state?.user?.currentUser?._id);
+
+  const formatTimestamp = (timestamp) => {
+    const date = new Date(timestamp);
+    return date.toLocaleString();
+  };
+
+  useEffect(() => {
+    const fetchChatHistory = async () => {
+      if (!userId) return;
+
+      try {
+        const response = await fetch(`${import.meta.env.VITE_BASE_URL}/api/chat/history?userId=${userId}`, {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+          },
+        });
+
+        const data = await response.json();
+        if (data.messages) {
+          const formattedMessages = data.messages.map((msg) => ({
+            ...msg,
+            timestamp: formatTimestamp(msg.timestamp),
+            content: formatReplyContent(msg.content),
+          }));
+          setMessages((prevMessages) => [
+            ...prevMessages,
+            ...formattedMessages,
+          ]);
+        }
+      } catch (error) {
+        console.error("Error fetching chat history:", error);
+      }
+    };
+
+    fetchChatHistory();
+  }, [userId]);
+
+  const formatReplyContent = (content) => {
+    return content
+      .split("\n")
+      .map((line) => line.replace(/\*\*/g, "").trim())  // Remove ** and trim
+      .filter((line) => line !== "")  // Remove empty lines
+      .map((line, idx) => <div key={idx} className="mb-2">{line}</div>)  // Wrap each line in div with spacing
+  };
 
   const handleSendMessage = async () => {
     if (!userMessage.trim()) return;
 
     setMessages((prevMessages) => [
       ...prevMessages,
-      { role: "user", content: userMessage },
+      { role: "user", content: userMessage, timestamp: formatTimestamp(new Date()) },
     ]);
     setLoading(true);
     const currentMessage = userMessage;
     setUserMessage("");
 
     try {
-      const response = await fetch(`${import.meta.env.VITE_BASE_URL}/api/chat`, {
+      const response = await fetch(`${import.meta.env.VITE_BASE_URL}/api/chat/chats`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ message: currentMessage }),
+        body: JSON.stringify({ message: currentMessage, userId }),
       });
       const data = await response.json();
-      setMessages((prevMessages) => [
-        ...prevMessages,
-        { role: "assistant", content: data.reply },
-      ]);
+
+      const formattedReply = formatReplyContent(data.reply);
+
+      const newMessage = {
+        role: "assistant",
+        content: formattedReply,
+        timestamp: formatTimestamp(new Date()),
+      };
+
+      setMessages((prevMessages) => [...prevMessages, newMessage]);
     } catch (error) {
       console.error("Error fetching chatbot response:", error);
       setMessages((prevMessages) => [
         ...prevMessages,
-        { role: "assistant", content: "Oops! Something went wrong." },
+        {
+          role: "assistant",
+          content: <div>Oops! Something went wrong.</div>,
+          timestamp: formatTimestamp(new Date()),
+        },
       ]);
     }
+
     setLoading(false);
   };
 
@@ -54,12 +113,13 @@ const Chatbot = () => {
           >
             <div
               className={`max-w-md p-3 my-2 text-justify rounded-lg transition-all duration-300 transform ${
-                message.role === "user" 
-                  ? "bg-blue-100 text-black shadow-sm" 
+                message.role === "user"
+                  ? "bg-blue-100 text-black shadow-sm"
                   : "bg-blue-50 text-black shadow-sm"
               }`}
             >
-              {message.content}
+              <div>{message.content}</div>
+              <div className="text-xs text-gray-500">{message.timestamp}</div>
             </div>
           </div>
         ))}
