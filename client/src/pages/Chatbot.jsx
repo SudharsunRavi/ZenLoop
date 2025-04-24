@@ -35,6 +35,7 @@ const Chatbot = () => {
           const formattedMessages = data.messages.map((msg) => ({
             ...msg,
             timestamp: formatTimestamp(msg.timestamp),
+            content: formatReplyContent(msg.content),
           }));
           setMessages((prevMessages) => [
             ...prevMessages,
@@ -48,6 +49,14 @@ const Chatbot = () => {
 
     fetchChatHistory();
   }, [userId]);
+
+  const formatReplyContent = (content) => {
+    return content
+      .split("\n")
+      .map((line) => line.replace(/\*\*/g, "").trim())  // Remove ** and trim
+      .filter((line) => line !== "")  // Remove empty lines
+      .map((line, idx) => <div key={idx} className="mb-2">{line}</div>)  // Wrap each line in div with spacing
+  };
 
   const handleSendMessage = async () => {
     if (!userMessage.trim()) return;
@@ -70,23 +79,27 @@ const Chatbot = () => {
       });
       const data = await response.json();
 
+      const formattedReply = formatReplyContent(data.reply);
+
       const newMessage = {
         role: "assistant",
-        content: data.reply,
+        content: formattedReply,
         timestamp: formatTimestamp(new Date()),
       };
 
-      setMessages((prevMessages) => [
-        ...prevMessages,
-        newMessage,
-      ]);
+      setMessages((prevMessages) => [...prevMessages, newMessage]);
     } catch (error) {
       console.error("Error fetching chatbot response:", error);
       setMessages((prevMessages) => [
         ...prevMessages,
-        { role: "assistant", content: "Oops! Something went wrong." },
+        {
+          role: "assistant",
+          content: <div>Oops! Something went wrong.</div>,
+          timestamp: formatTimestamp(new Date()),
+        },
       ]);
     }
+
     setLoading(false);
   };
 
