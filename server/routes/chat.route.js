@@ -1,6 +1,7 @@
 const router=require('express').Router();
-const { getChatResponse } = require('../controllers/chat.controller');
+const { getChatResponse, getChatHistory } = require('../controllers/chat.controller');
 
-router.post('/chat', getChatResponse)
+router.post('/chats', getChatResponse);
+router.get('/history', getChatHistory);
 
 module.exports = router

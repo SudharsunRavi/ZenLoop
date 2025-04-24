@@ -36,14 +36,14 @@ const LandingPage = () => {
             <span className="font-bold">Welcome to Zenloop - Your private, AI-powered mental wellness companion.</span>            
           </p>
           <p className="text-xl text-gray-600 text-justify -mt-3">
-            Reflect through secure journaling, track your emotions, and engage with a chatbot trained in Cognitive Behavioral Therapy.
-            Experience personalized support and real-time insights designed to help you grow and heal.
+          Securely journal your thoughts, track your mood, and chat with a CBT-trained AI - All in one place.
+          Unlock real-time insights, identify emotional patterns, and receive personalized support that evolves with you.
           </p>
           <button
             onClick={() => navigate("/login")}
             className="mt-3 py-3 text-lg text-blue-600 font-semibold rounded-lg hover:text-blue-800 transition"
           >
-            Get Started ➜
+            Start your journey ➜
           </button>
         </div>
 

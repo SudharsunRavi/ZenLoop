@@ -22,7 +22,7 @@ const fetchSpotifyToken = async () => {
 
 const fetchSongs = async () => {
     const token = await fetchSpotifyToken();
-    const query = 'anirudh hits love melody tamil';
+    const query = 'mind-relaxing calm hits meditation';
     const offset = Math.floor(Math.random() * 40);
   
     const response = await fetch(`https://api.spotify.com/v1/search?q=${encodeURIComponent(query)}&type=track&limit=7&offset=${offset}&market=IN`, {
