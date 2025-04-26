@@ -14,6 +14,9 @@ const journalSchema = new mongoose.Schema(
             type: Number, 
             required: true 
         },
+        summary: { 
+            type: String,
+        },
     },
     {
         timestamps: true,

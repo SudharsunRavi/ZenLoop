@@ -8,13 +8,13 @@ const contract = new web3.eth.Contract(abi, CONTRACT_ADDRESS);
 
 // Save mood + tx hash
 const saveMetadata = async (req, res) => {
-    const { walletAddress, txHash, mood } = req.body;
+    const { walletAddress, txHash, mood, summary } = req.body;
     if (!walletAddress || !txHash || !mood) {
         return res.status(400).json({ error: "Missing fields" });
     }
 
     try {
-        const entry = new JournalEntry({ walletAddress, txHash, mood });
+        const entry = new JournalEntry({ walletAddress, txHash, mood, summary });
         await entry.save();
         return res.json({ message: "Saved metadata" });
     } catch (err) {
