@@ -39,7 +39,7 @@ const MoodChart = () => {
         fetchMoodTrend();
     }, []);
     return (
-        <div className="bg-white p-3 rounded-xl shadow-lg">
+        <div className="bg-white p-3 rounded-xl shadow-lg max-h-96">
                 <h2 className="text-xl flex justify-center font-medium mb-4">Mood Trend</h2>
             
                 {moodData.length === 0 ? (

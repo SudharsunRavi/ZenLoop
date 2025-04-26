@@ -15,6 +15,7 @@ const authRoutes=require('./routes/auth.route');
 const journalRoutes=require('./routes/journal.route');
 const surveyRoutes=require('./routes/survey.route');
 const chatRoutes = require('./routes/chat.route');
+const copingSuggestionRoutes = require('./routes/copingsuggestion.route');
 
 app.use(cors({
     origin: 'http://localhost:5173',
@@ -25,6 +26,7 @@ app.use('/auth', authRoutes);
 app.use('/journal', journalRoutes);
 app.use('/survey', surveyRoutes);
 app.use('/api/chat', chatRoutes);
+app.use('/copingsuggestion', copingSuggestionRoutes);
 
 connectToDB().then(() => {
     app.listen(5050, () => {
