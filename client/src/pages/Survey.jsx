@@ -3,6 +3,7 @@ import {questions} from '../utils/UserQuestions'
 import { useNavigate } from "react-router-dom";
 import toast, { Toaster } from "react-hot-toast";
 import { useSelector } from "react-redux";
+import LoadingSpinner from "../components/LoadingSpinner";
 
 const MentalHealthSurvey=()=>{
   const [currentQuestion, setCurrentQuestion] = useState(0);
