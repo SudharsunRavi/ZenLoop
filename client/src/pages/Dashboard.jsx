@@ -4,6 +4,7 @@ import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import MoodChart from "../components/MoodChart";
 import SpotifyList from "../components/SpotifyList";
+import CopingSuggestion from "../components/CopingSuggestion";
 
 const Dashboard = () => {
   const userid = useSelector((state) => state?.user?.currentUser?._id);
@@ -41,7 +42,7 @@ const Dashboard = () => {
   
       <div className="flex flex-col gap-4">
         <div className="flex-1">
-          <MoodChart />
+          <CopingSuggestion />
         </div>
         <div className="flex-1">
           <MoodChart />
